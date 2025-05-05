@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing Speed Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      text-align: center;
+      background-color: #f5f5f5;
+    }
+    #test-text {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #countdown {
+      font-size: 1.5rem;
+      margin: 1rem auto;
+      color: #d9534f;
+    }
+    textarea {
+      width: 100%;
+      max-width: 600px;
+      height: 100px;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #results {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Typing Speed Test</h1>
+  <div id="test-text">
+    Customer service should be a key focus for good businesses. Research shows that customer service truly sets apart a great business from the rest. Companies would not even exist without their customers, no matter if it is B2B or B2C. To keep customers happy, businesses should build a customer first focus and respond to their needs and wants. The value of good customer service is instant. It can quickly turn a one time customer into a lifelong customer with several upsell events. What is even more important to consider is how a good customer experience quickly spreads. Each happy customer can give positive word of mouth to others and bring in new customers. One aspect that is often missing is proactive customer service.
+  </div>
+  <div id="countdown">Time Left: 60s</div>
+  <textarea id="user-input" placeholder="Start typing here..." oninput="startTimer()"></textarea>
+  <br />
+  <button onclick="endTest()">Finish</button>
+  <div id="results"></div>
+
+  <script>
+    let startTime;
+    let ended = false;
+    let countdownInterval;
+    let timeLeft = 60;
+
+    function startTimer() {
+      if (!startTime) {
+        startTime = new Date();
+        countdownInterval = setInterval(() => {
+          timeLeft--;
+          document.getElementById("countdown").textContent = `Time Left: ${timeLeft}s`;
+          if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            endTest();
+          }
+        }, 1000);
+      }
+    }
+
+    function endTest() {
+      if (ended) return;
+      ended = true;
+      clearInterval(countdownInterval);
+
+      const endTime = new Date();
+      const timeDiff = (endTime - startTime) / 1000;
+      const inputText = document.getElementById("user-input").value.trim();
+      const wordCount = inputText.split(/\s+/).length;
+      const wpm = Math.round((wordCount / timeDiff) * 60);
+
+      const original = document.getElementById("test-text").innerText.trim();
+      const accuracy = calculateAccuracy(original, inputText);
+
+      document.getElementById("results").innerHTML =
+        `<p><strong>Time:</strong> ${timeDiff.toFixed(2)} seconds</p>` +
+        `<p><strong>Words per minute (WPM):</strong> ${wpm}</p>` +
+        `<p><strong>Accuracy:</strong> ${accuracy.toFixed(2)}%</p>`;
+    }
+
+    function calculateAccuracy(original, typed) {
+      const originalWords = original.split(/\s+/);
+      const typedWords = typed.split(/\s+/);
+      let correct = 0;
+      for (let i = 0; i < typedWords.length; i++) {
+        if (typedWords[i] === originalWords[i]) correct++;
+      }
+      return (correct / originalWords.length) * 100;
+    }
+  </script>
+</body>
+</html>
